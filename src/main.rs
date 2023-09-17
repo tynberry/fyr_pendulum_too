@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"] //console ma boi
+
 pub mod dulum;
 pub mod meth;
 pub mod mouse;
