@@ -45,7 +45,7 @@ impl Dulum {
         let x = previous_x + (self.len * self.angle.sin()) as f32;
         let y = previous_y + (self.len * self.angle.cos()) as f32;
 
-        draw_line(previous_x, previous_y, x, y, 0.1, YELLOW);
+        draw_line(previous_x, previous_y, x, y, 0.1, ORANGE);
 
         (x, y)
     }

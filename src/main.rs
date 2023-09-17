@@ -1,11 +1,12 @@
 pub mod dulum;
 pub mod meth;
+pub mod mouse;
 
 use dulum::Dulum;
 use macroquad::{prelude::*, ui::{root_ui, widgets, Skin}, hash};
 use nalgebra::{DMatrix, DVector};
 
-use crate::meth::{deg2rad, rad2deg, normalize_angle};
+use crate::{meth::{deg2rad, rad2deg, normalize_angle}, mouse::MouseMovement};
 
 const DULUMS_COLORS: [Color; 6] = [
     color_u8!(255,   0,   0, 255),
@@ -95,10 +96,13 @@ pub fn accumulate_gravity(dulums: &[Dulum]) -> DMatrix<f64> {
 async fn main() {
     //camera states
     let mut camera_scale = 30.0;
+    let mut camera_origin = vec2(0.0, 0.0);
+
+    let mut mouse = MouseMovement::new();
     //prepare state
     let mut dulums = vec![
-        Dulum::new(deg2rad(179.0), 3.0, 100.0, false, 100.0, 3.0, RED, 0.2),
-        Dulum::new(deg2rad(0.0), 10.0, 1.0, true, 40.0, 10.0, GREEN, 0.2),
+        Dulum::new(0.0, 2.0, 1.0, false, 100.0, 1.0, DULUMS_COLORS[0], 0.2),
+        Dulum::new(0.0, 2.0, 1.0, false, 100.0, 1.0, DULUMS_COLORS[1], 0.2)
     ];
 
     const TIME_STEP: f32 = 0.001;
@@ -106,8 +110,21 @@ async fn main() {
     let mut simulate: bool = false;
 
     loop {
+        mouse.update();
         //camera input handling
-        camera_scale *= 1.05f32.powf(mouse_wheel().1);
+        if !root_ui().is_mouse_captured() {
+            camera_scale *= 1.05f32.powf(mouse_wheel().1);
+            if is_mouse_button_down(MouseButton::Right) {
+                camera_origin.x -= mouse.dx / camera_scale;
+                camera_origin.y -= mouse.dy / camera_scale;
+            }
+        }
+        if is_key_pressed(KeyCode::Up) {
+            camera_scale *= 1.05f32;
+        }
+        if is_key_pressed(KeyCode::Down) {
+            camera_scale /= 1.05f32;
+        }
         //step the dulums
         if simulate {
             let step_count = (get_frame_time() / TIME_STEP) as usize;
@@ -149,7 +166,7 @@ async fn main() {
         set_camera(&Camera2D{ 
             rotation: 0.0, 
             zoom: vec2(camera_scale / screen_width(), camera_scale / screen_height()),
-            target: vec2(0.0, 0.0), 
+            target: camera_origin, 
             offset: vec2(0.0, 0.0),
             render_target: None,
             viewport: None
