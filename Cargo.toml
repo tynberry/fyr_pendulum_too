@@ -1,0 +1,11 @@
+[package]
+name = "fyr_pendulum_too"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+iterwindows = "0.3.0"
+macroquad = {git = "https://github.com/tynberry/macroquad/", branch="ui_drag_num_fix"}
+nalgebra = "0.32.3"
