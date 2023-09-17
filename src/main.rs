@@ -119,11 +119,11 @@ async fn main() {
                 camera_origin.y -= mouse.dy / camera_scale;
             }
         }
-        if is_key_pressed(KeyCode::Up) {
-            camera_scale *= 1.05f32;
+        if is_key_down(KeyCode::Up) {
+            camera_scale *= 3.00f32.powf(get_frame_time());
         }
-        if is_key_pressed(KeyCode::Down) {
-            camera_scale /= 1.05f32;
+        if is_key_down(KeyCode::Down) {
+            camera_scale /= 3.00f32.powf(get_frame_time());
         }
         //step the dulums
         if simulate {
