@@ -97,7 +97,7 @@ pub fn accumulate_gravity(dulums: &[Dulum]) -> DMatrix<f64> {
 #[macroquad::main("Multiple Pendulums")]
 async fn main() {
     //camera states
-    let mut camera_scale = 30.0;
+    let mut camera_scale = 70.0;
     let mut camera_origin = vec2(0.0, 0.0);
 
     let mut mouse = MouseMovement::new();
