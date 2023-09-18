@@ -204,18 +204,18 @@ async fn main() {
         //back to screen space
         set_default_camera();
         //gui       
-        widgets::Window::new(hash!(), vec2(0.0, 0.0), vec2(200.0, 400.0))           
-            .label("Debug window")
+        widgets::Window::new(hash!(), vec2(0.0, 0.0), vec2(250.0, 600.0))           
+            .label("Simulation controls")
             .close_button(true)
             .ui(&mut root_ui(), |ui| {
 
                 //pohyb simulace
-                ui.checkbox(hash!(), "Simuluj", &mut simulate);
+                ui.checkbox(hash!(), "Simulate", &mut simulate);
 
                 //uprav počty dul
                 let mut dulum_count = dulums.len() - 1;
 
-                ui.combo_box(hash!(), "Počet Dul", &["1", "2", "3", "4", "5", "6"], &mut dulum_count);
+                ui.combo_box(hash!(), "Number of Dulums", &["1", "2", "3", "4", "5", "6"], &mut dulum_count);
     
                 let dulum_count = dulum_count + 1;
 
