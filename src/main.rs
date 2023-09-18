@@ -110,6 +110,8 @@ async fn main() {
     const TIME_STEP: f32 = 0.001;
     //za warudo
     let mut simulate: bool = false;
+    //window status
+    let mut hide_window = true;
 
     loop {
         mouse.update();
@@ -204,10 +206,22 @@ async fn main() {
         //back to screen space
         set_default_camera();
         //gui       
-        widgets::Window::new(hash!(), vec2(0.0, 0.0), vec2(250.0, 600.0))           
+        let window_size = if hide_window {
+            vec2(250.0, 50.0)
+        }else{
+            vec2(250.0, 600.0)
+        };
+        widgets::Window::new(hash!(), vec2(0.0, 0.0), window_size)           
             .label("Simulation controls")
             .close_button(true)
             .ui(&mut root_ui(), |ui| {
+
+                //schování okna
+                ui.checkbox(hash!(), "Hide Window", &mut hide_window);
+
+                if hide_window {
+                    return;
+                }
 
                 //pohyb simulace
                 ui.checkbox(hash!(), "Simulate", &mut simulate);
