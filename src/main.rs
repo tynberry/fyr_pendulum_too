@@ -5,7 +5,7 @@ pub mod meth;
 pub mod mouse;
 
 use dulum::Dulum;
-use macroquad::{prelude::*, ui::{root_ui, widgets, Skin}, hash};
+use macroquad::{prelude::*, ui::{root_ui, widgets}, hash};
 use nalgebra::{DMatrix, DVector};
 
 use crate::{meth::{deg2rad, rad2deg, normalize_angle}, mouse::MouseMovement};
@@ -94,7 +94,7 @@ pub fn accumulate_gravity(dulums: &[Dulum]) -> DMatrix<f64> {
     DMatrix::from_vec(elements.len(), 1, elements)
 }
 
-#[macroquad::main("Fyrdulum 2 - now with more dulums")]
+#[macroquad::main("Multiple Pendulums")]
 async fn main() {
     //camera states
     let mut camera_scale = 30.0;
@@ -115,7 +115,13 @@ async fn main() {
         mouse.update();
         //camera input handling
         if !root_ui().is_mouse_captured() {
-            camera_scale *= 1.05f32.powf(mouse_wheel().1);
+            let norm_mouse = if mouse_wheel().1.abs() <= 0.01 {
+                0.0
+            }else{
+                mouse_wheel().1.signum()
+            };
+
+            camera_scale *= 1.05f32.powf(norm_mouse);
             if is_mouse_button_down(MouseButton::Right) {
                 camera_origin.x -= mouse.dx / camera_scale;
                 camera_origin.y -= mouse.dy / camera_scale;
