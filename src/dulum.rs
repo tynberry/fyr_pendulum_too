@@ -7,6 +7,8 @@ use nalgebra::DVector;
 
 #[derive(Clone)]
 pub struct Dulum {
+    pub visible: bool, 
+
     pub angle: f64,
     pub len: f64,
     pub default_len: f64,
@@ -27,6 +29,7 @@ pub struct Dulum {
 impl Dulum {
     pub fn new(angle: f64, len: f64, mass: f64, elastic: bool, hardness: f64, default_len: f64, color: Color, size: f32) -> Self {
         Self {
+            visible: true,
             angle,
             len,
             mass,
@@ -53,6 +56,10 @@ impl Dulum {
     pub fn render_circle(&self, previous_x: f32, previous_y: f32) -> (f32, f32) {
         let x = previous_x + (self.len * self.angle.sin()) as f32;
         let y = previous_y + (self.len * self.angle.cos()) as f32;
+
+        if !self.visible {
+            return (x,y);
+        }
 
         draw_circle(x, y, self.size, self.color);
 

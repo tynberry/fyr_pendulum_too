@@ -233,6 +233,8 @@ async fn main() {
                     for (ind, dulum) in dulums.iter_mut().enumerate() {
                         egui::CollapsingHeader::new(format!("Dulum #{}", ind + 1))
                             .show(ui, |ui| {
+                                //visibility 
+                                ui.checkbox(&mut dulum.visible, "Show dulum");
                                 //dulum's angle
                                 ui.horizontal(|ui| {
                                     ui.label("Angle");
