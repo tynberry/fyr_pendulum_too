@@ -233,10 +233,6 @@ async fn main() {
                     for (ind, dulum) in dulums.iter_mut().enumerate() {
                         egui::CollapsingHeader::new(format!("Dulum #{}", ind + 1))
                             .show(ui, |ui| {
-                                //visibility 
-                                ui.checkbox(&mut dulum.visible, "Show dulum");
-                                ui.checkbox(&mut dulum.visible_line, "Show line");
-                                ui.checkbox(&mut dulum.visible_trace, "Show trace");
                                 //dulum's angle
                                 ui.horizontal(|ui| {
                                     ui.label("Angle");
@@ -270,6 +266,10 @@ async fn main() {
                                     ui.label("Default Len");
                                     ui.add(egui::DragValue::new(&mut dulum.default_len));
                                 });
+                                //visibility 
+                                ui.checkbox(&mut dulum.visible, "Show dulum");
+                                ui.checkbox(&mut dulum.visible_line, "Show line");
+                                ui.checkbox(&mut dulum.visible_trace, "Show trace");
                             });
                     }
                 });
