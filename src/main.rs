@@ -203,7 +203,9 @@ async fn main() {
             (previous_x, previous_y) = dulum.render_circle(previous_x, previous_y);
         }
 
-
+        //GUI COMES HERE
+        //uncomment for screen space
+        //set_default_camera(); 
 
         next_frame().await;
     }
