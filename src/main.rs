@@ -235,6 +235,8 @@ async fn main() {
                             .show(ui, |ui| {
                                 //visibility 
                                 ui.checkbox(&mut dulum.visible, "Show dulum");
+                                ui.checkbox(&mut dulum.visible_line, "Show line");
+                                ui.checkbox(&mut dulum.visible_trace, "Show trace");
                                 //dulum's angle
                                 ui.horizontal(|ui| {
                                     ui.label("Angle");

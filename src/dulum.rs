@@ -8,6 +8,8 @@ use nalgebra::DVector;
 #[derive(Clone)]
 pub struct Dulum {
     pub visible: bool, 
+    pub visible_line: bool,
+    pub visible_trace: bool,
 
     pub angle: f64,
     pub len: f64,
@@ -30,6 +32,8 @@ impl Dulum {
     pub fn new(angle: f64, len: f64, mass: f64, elastic: bool, hardness: f64, default_len: f64, color: Color, size: f32) -> Self {
         Self {
             visible: true,
+            visible_line: true,
+            visible_trace: true,
             angle,
             len,
             mass,
@@ -48,7 +52,9 @@ impl Dulum {
         let x = previous_x + (self.len * self.angle.sin()) as f32;
         let y = previous_y + (self.len * self.angle.cos()) as f32;
 
-        draw_line(previous_x, previous_y, x, y, 0.1, ORANGE);
+        if self.visible_line {
+            draw_line(previous_x, previous_y, x, y, 0.1, ORANGE);
+        }
 
         (x, y)
     }
@@ -209,6 +215,10 @@ impl Dulum {
     }
 
     pub fn render_trail(&self) {
+        if !self.visible_trace {
+            return;
+        } 
+
         for [(ind, prev), (_,now)] in self.trail.iter().enumerate().array_windows() {
             let ratio = ind as f32 / self.trail.len() as f32;
             let color = Color{
