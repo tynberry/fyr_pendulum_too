@@ -110,8 +110,6 @@ async fn main() {
     const TIME_STEP: f32 = 0.001;
     //za warudo
     let mut simulate: bool = false;
-    //window status
-    let mut hide_window = true;
 
     loop {
         mouse.update();
@@ -203,9 +201,77 @@ async fn main() {
             (previous_x, previous_y) = dulum.render_circle(previous_x, previous_y);
         }
 
-        //GUI COMES HERE
-        //uncomment for screen space
-        //set_default_camera(); 
+        //egui
+        set_default_camera(); 
+
+        egui_macroquad::ui(|egui_ctx| {
+            egui::Window::new("Simulation controls")
+                .show(egui_ctx, |ui| {
+                    //simulace?
+                    ui.add( egui::Checkbox::new(&mut simulate, "Simulate") );
+                    //number of dulums
+                    let mut expected_dulums = dulums.len();
+                    ui.horizontal(|ui| {
+                        ui.label("Number of Dulums");
+                        ui.add( egui::Slider::new(&mut expected_dulums, 1..=6) );
+                    });
+                    if ui.button("Reset").clicked() {
+                        dulums.clear();
+                    }
+                    //correct number of dulums 
+                    if expected_dulums < dulums.len() {
+                        dulums.truncate(expected_dulums);
+                    }
+                    if expected_dulums > dulums.len() {
+                        for _ in 0..(expected_dulums - dulums.len()) {
+                            let color = DULUMS_COLORS[dulums.len() % DULUMS_COLORS.len()];
+                            dulums.push(Dulum::new(0.0, 2.0, 1.0, false, 100.0, 2.0, color, 0.2));
+                        }
+                    }
+
+                    //ovládání pro dula 
+                    for (ind, dulum) in dulums.iter_mut().enumerate() {
+                        egui::CollapsingHeader::new(format!("Dulum #{}", ind + 1))
+                            .show(ui, |ui| {
+                                //dulum's angle
+                                ui.horizontal(|ui| {
+                                    ui.label("Angle");
+                                    meth::drag_angle(ui, &mut dulum.angle)
+                                });
+                                ui.horizontal(|ui| {
+                                    ui.label("Angle Der");
+                                    meth::drag_angle(ui, &mut dulum.angle_der)
+                                });
+
+                                //dulum's length
+                                ui.horizontal(|ui| {
+                                    ui.label("Length");
+                                    ui.add(egui::DragValue::new(&mut dulum.len));
+                                });
+                                ui.horizontal(|ui| {
+                                    ui.label("Length Der");
+                                    ui.add(egui::DragValue::new(&mut dulum.len_der));
+                                });
+
+                                //elastic 
+                                ui.checkbox(&mut dulum.elastic, "Elastic");
+
+                                //hardness
+                                ui.horizontal(|ui| {
+                                    ui.label("Hardness");
+                                    ui.add(egui::DragValue::new(&mut dulum.hardness));
+                                });
+
+                                ui.horizontal(|ui| {
+                                    ui.label("Default Len");
+                                    ui.add(egui::DragValue::new(&mut dulum.default_len));
+                                });
+                            });
+                    }
+                });
+        });
+
+        egui_macroquad::draw();
 
         next_frame().await;
     }
