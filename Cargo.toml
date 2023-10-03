@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 iterwindows = "0.3.0"
-macroquad = "0.4.4"#{git = "https://github.com/tynberry/macroquad/", branch="ui_drag_num_fix"}
+macroquad = {git = "https://github.com/Bytekeeper/macroquad"}
+egui-macroquad = {git = "https://github.com/Bytekeeper/egui-macroquad"}
 nalgebra = "0.32.3"
