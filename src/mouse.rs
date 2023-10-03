@@ -8,7 +8,7 @@ pub struct MouseMovement {
     pub mousey: f32,
 
     pub dx: f32,
-    pub dy: f32
+    pub dy: f32,
 }
 
 impl MouseMovement {
@@ -20,8 +20,8 @@ impl MouseMovement {
             last_mousey: my,
             mousex: mx,
             mousey: my,
-            dx: 0.0, 
-            dy: 0.0
+            dx: 0.0,
+            dy: 0.0,
         }
     }
 
@@ -37,11 +37,11 @@ impl MouseMovement {
         self.mousex = mx;
         self.mousey = my;
 
-        self.dx = self.mousex - self.last_mousex; 
-        self.dy = self.mousey - self.last_mousey; 
+        self.dx = self.mousex - self.last_mousex;
+        self.dy = self.mousey - self.last_mousey;
 
         self.dx *= 2.0; //TODO: fixni to dpi ve více rozumném způsobu (pokud za to vůbec může dpi...)
         self.dy *= 2.0; //TODO: fixni to dpi ve více rozumném způsobu (pokud za to vůbec může dpi...)
-        //nemůže, může za to ten fakt, že máme rozsah -1..1 a ne 0..1, což má celkem délku 2 a ne 1
+                        //nemůže, může za to ten fakt, že máme rozsah -1..1 a ne 0..1, což má celkem délku 2 a ne 1
     }
 }
