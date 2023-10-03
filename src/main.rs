@@ -103,8 +103,8 @@ async fn main() {
     let mut mouse = MouseMovement::new();
     //prepare state
     let mut dulums = vec![
-        Dulum::new(0.0, 2.0, 1.0, false, 100.0, 1.0, DULUMS_COLORS[0], 0.2),
-        Dulum::new(0.0, 2.0, 1.0, false, 100.0, 1.0, DULUMS_COLORS[1], 0.2)
+        Dulum::new(0.0, 2.0, 1.0, false, 100.0, 2.0, DULUMS_COLORS[0], 0.2),
+        Dulum::new(0.0, 2.0, 1.0, false, 100.0, 2.0, DULUMS_COLORS[1], 0.2)
     ];
 
     const TIME_STEP: f32 = 0.001;
@@ -237,7 +237,7 @@ async fn main() {
                 if dulum_count > dulums.len() {
                     for _ in 0..(dulum_count - dulums.len()) {
                         let color = DULUMS_COLORS[dulums.len()];
-                        dulums.push(Dulum::new(0.0, 2.0, 1.0, false, 100.0, 1.0, color, 0.2));
+                        dulums.push(Dulum::new(0.0, 2.0, 1.0, false, 100.0, 2.0, color, 0.2));
                     }
                 }
                 if dulum_count < dulums.len() {
