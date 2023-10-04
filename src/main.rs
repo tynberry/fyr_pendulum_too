@@ -110,7 +110,7 @@ async fn main() {
         Dulum::new(0.0, 2.0, 1.0, false, 100.0, 2.0, DULUMS_COLORS[1], 0.2),
     ];
 
-    const TIME_STEP: f32 = 0.001;
+    let mut time_step: f32 = 0.001;
     //za warudo
     let mut simulate: bool = false;
     let mut time_budget: f32 = 0.0;
@@ -140,8 +140,8 @@ async fn main() {
         //step the dulums
         if simulate {
             time_budget += get_frame_time();
-            while time_budget >= TIME_STEP {
-                time_budget -= TIME_STEP;
+            while time_budget >= time_step {
+                time_budget -= time_step;
                 //gain variables
                 let jacobi = accumulate_jacobi(&dulums);
                 let jacobi_trans = jacobi.transpose();
@@ -162,10 +162,10 @@ async fn main() {
                 let mut pointer = 0;
                 for dulum in &mut dulums {
                     if dulum.is_elastic() {
-                        dulum.move_state(TIME_STEP as f64, shit[pointer], shit[pointer + 1]);
+                        dulum.move_state(time_step as f64, shit[pointer], shit[pointer + 1]);
                         pointer += 2;
                     } else {
-                        dulum.move_state(TIME_STEP as f64, shit[pointer], 0.0);
+                        dulum.move_state(time_step as f64, shit[pointer], 0.0);
                         pointer += 1;
                     }
                 }
@@ -214,6 +214,12 @@ async fn main() {
             egui::Window::new("Simulation controls").show(egui_ctx, |ui| {
                 //simulace?
                 ui.add(egui::Checkbox::new(&mut simulate, "Simulate"));
+                //time step size
+                ui.add(
+                    egui::Slider::new(&mut time_step, 0.0..=1.0)
+                        .logarithmic(true)
+                        .text("Time step")
+                );
                 //number of dulums
                 let mut expected_dulums = dulums.len();
                 ui.horizontal(|ui| {
