@@ -19,6 +19,7 @@ pub struct Dulum {
     pub len_der: f64,
 
     pub elastic: bool,
+    pub push_elastic: bool,
     pub hardness: f64,
 
     pub color: Color,
@@ -48,6 +49,7 @@ impl Dulum {
             angle_der: 0.0,
             len_der: 0.0,
             elastic,
+            push_elastic: false,
             color,
             size,
             trail: VecDeque::with_capacity(1024),
@@ -176,7 +178,11 @@ impl Dulum {
         (
             0.0,
             if self.elastic {
-                Some(-self.hardness * (self.len - self.default_len))
+                if self.push_elastic && self.len < self.default_len{
+                    Some(0.0)
+                }else{
+                    Some(-self.hardness * (self.len - self.default_len))
+                }
             } else {
                 None
             },
