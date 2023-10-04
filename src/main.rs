@@ -113,6 +113,7 @@ async fn main() {
     const TIME_STEP: f32 = 0.001;
     //za warudo
     let mut simulate: bool = false;
+    let mut time_budget: f32 = 0.0;
 
     loop {
         mouse.update();
@@ -138,8 +139,9 @@ async fn main() {
         }
         //step the dulums
         if simulate {
-            let step_count = (get_frame_time() / TIME_STEP) as usize;
-            for _ in 0..step_count {
+            time_budget += get_frame_time();
+            while time_budget >= TIME_STEP {
+                time_budget -= TIME_STEP;
                 //gain variables
                 let jacobi = accumulate_jacobi(&dulums);
                 let jacobi_trans = jacobi.transpose();
