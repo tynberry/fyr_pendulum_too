@@ -222,11 +222,13 @@ async fn main() {
                 //simulace?
                 ui.add(egui::Checkbox::new(&mut simulate, "Simulate"));
                 //time step size
-                ui.add(
-                    egui::Slider::new(&mut time_step, 0.0..=1.0)
-                        .logarithmic(true)
-                        .text("Time step")
-                );
+                ui.horizontal(|ui| {
+                    ui.label("Step size");
+                    ui.add(
+                        egui::Slider::new(&mut time_step, 0.0..=1.0)
+                            .logarithmic(true)
+                    );
+                });
                 //number of dulums
                 let mut expected_dulums = dulums.len();
                 ui.horizontal(|ui| {
