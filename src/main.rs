@@ -257,6 +257,7 @@ async fn main() {
 
                         //elastic
                         ui.checkbox(&mut dulum.elastic, "Elastic");
+                        ui.checkbox(&mut dulum.push_elastic, "Push elastic");
 
                         //hardness
                         ui.horizontal(|ui| {
