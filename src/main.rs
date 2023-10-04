@@ -139,7 +139,14 @@ async fn main() {
         }
         //step the dulums
         if simulate {
+            //add to the time budget
             time_budget += get_frame_time();
+            //snow balling protection 
+            if time_budget >= 1.0 {
+                time_budget = 0.0;
+                simulate = false;
+            }
+
             while time_budget >= time_step {
                 time_budget -= time_step;
                 //gain variables
