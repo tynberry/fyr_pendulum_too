@@ -162,6 +162,32 @@ async fn main() {
                 let Some(left) = left.try_inverse() else {
                     panic!("If no inverse, no working!");
                 };
+                let right = hooks + jacobi_trans * mass.clone() * (gravity.clone() - constraint);
+
+                let shit = left * right;
+                //extract values
+                let mut pointer = 0;
+                for dulum in &mut dulums {
+                    if dulum.is_elastic() {
+                        dulum.leapfrog_part_one(time_step as f64, shit[pointer], shit[pointer + 1]);
+                        pointer += 2;
+                    } else {
+                        dulum.leapfrog_part_one(time_step as f64, shit[pointer], 0.0);
+                        pointer += 1;
+                    }
+                }
+                //do it once again, but with newer positions (and velocities, oops)
+                //gain variables
+                let jacobi = accumulate_jacobi(&dulums);
+                let jacobi_trans = jacobi.transpose();
+                let constraint = accumulate_constraint(&dulums);
+                let hooks = accumulate_hooks_force(&dulums);
+
+                //calculate sides
+                let left = jacobi_trans.clone() * mass.clone() * jacobi;
+                let Some(left) = left.try_inverse() else {
+                    panic!("If no inverse, no working!");
+                };
                 let right = hooks + jacobi_trans * mass * (gravity - constraint);
 
                 let shit = left * right;
@@ -169,10 +195,10 @@ async fn main() {
                 let mut pointer = 0;
                 for dulum in &mut dulums {
                     if dulum.is_elastic() {
-                        dulum.move_state(time_step as f64, shit[pointer], shit[pointer + 1]);
+                        dulum.leapfrog_part_two(time_step as f64, shit[pointer], shit[pointer + 1]);
                         pointer += 2;
                     } else {
-                        dulum.move_state(time_step as f64, shit[pointer], 0.0);
+                        dulum.leapfrog_part_two(time_step as f64, shit[pointer], 0.0);
                         pointer += 1;
                     }
                 }

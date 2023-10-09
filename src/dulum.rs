@@ -192,7 +192,7 @@ impl Dulum {
 
 //steppin and gettin
 impl Dulum {
-    pub fn move_state(&mut self, dt: f64, angle_der_der: f64, len_der_der: f64) {
+    pub fn leapfrog_part_one(&mut self, dt: f64, angle_der_der: f64, len_der_der: f64) {
         //pokud není elastický, vymaž len_der
         if !self.elastic {
             self.len_der = 0.0;
@@ -204,8 +204,10 @@ impl Dulum {
         //increase only by half
         self.angle += self.angle_der * dt;
         self.len += self.len_der * dt;
+    }
 
-        //put back the second half
+    pub fn leapfrog_part_two(&mut self, dt: f64, angle_der_der: f64, len_der_der: f64) {
+        //increase velocities to newer values
         self.angle_der += angle_der_der * dt / 2.0;
         self.len_der += len_der_der * dt / 2.0;
     }
