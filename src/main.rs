@@ -4,7 +4,10 @@ pub mod dulum;
 pub mod meth;
 pub mod mouse;
 
+use std::collections::VecDeque;
+
 use dulum::Dulum;
+use egui::plot::{PlotPoints, Line};
 use macroquad::{
     hash,
     prelude::*,
@@ -114,6 +117,9 @@ async fn main() {
     //za warudo
     let mut simulate: bool = false;
     let mut time_budget: f32 = 0.0;
+
+    //energy trails 
+    let mut energy_trail: VecDeque<f64> = VecDeque::with_capacity(1024);
 
     loop {
         mouse.update();
@@ -324,8 +330,23 @@ async fn main() {
                 egui::CollapsingHeader::new("Energy")
                     .show(ui, |ui| {
 
+                        let points: PlotPoints = energy_trail.iter()
+                            .enumerate()
+                            .map(|(x, y)| [x as f64, *y])
+                            .collect();
+
+                        let line = Line::new(points);
+
+                        egui::plot::Plot::new("Total Energy")
+                            .view_aspect(2.0)
+                            .show(ui, |x| {
+                                x.line(line)
+                        });
+
+
                         let mut x = 0.0;
                         let mut y = 0.0;
+                        let mut ultra_total = 0.0;
 
                         for (ind, dulum) in dulums.iter().enumerate() {
                             let pot_grav = dulum.potential_gravity_energy(x, y);
@@ -336,6 +357,7 @@ async fn main() {
                             let kinet = dulum.kinetic_energy();
 
                             let total = pot_grav.0 + pot_elas + kinet;
+                            ultra_total += total;
 
                             egui::CollapsingHeader::new(format!("Dulum {}", ind))   
                                 .show(ui, |ui| {
@@ -345,6 +367,12 @@ async fn main() {
                                     ui.label(format!("Total: {:.2}", total).as_str());
                             });
                         }
+
+                        //přidej ultra total 
+                        if energy_trail.len() >= 1024 {
+                            energy_trail.pop_front();
+                        }
+                        energy_trail.push_back(ultra_total);
 
                     })
             });
