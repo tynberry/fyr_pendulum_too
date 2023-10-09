@@ -304,6 +304,11 @@ async fn main() {
                             ui.add(egui::DragValue::new(&mut dulum.len_der));
                         });
 
+                        ui.horizontal(|ui| {
+                            ui.label("Mass");
+                            ui.add(egui::DragValue::new(&mut dulum.mass));
+                        });
+
                         //elastic
                         ui.checkbox(&mut dulum.elastic, "Elastic");
                         ui.checkbox(&mut dulum.push_elastic, "Push elastic");
