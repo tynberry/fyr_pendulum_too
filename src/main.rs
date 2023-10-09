@@ -319,6 +319,34 @@ async fn main() {
                         ui.checkbox(&mut dulum.visible_trace, "Show trace");
                     });
                 }
+
+                //energy handling
+                egui::CollapsingHeader::new("Energy")
+                    .show(ui, |ui| {
+
+                        let mut x = 0.0;
+                        let mut y = 0.0;
+
+                        for (ind, dulum) in dulums.iter().enumerate() {
+                            let pot_grav = dulum.potential_gravity_energy(x, y);
+                            x = pot_grav.1;
+                            y = pot_grav.2;
+
+                            let pot_elas = dulum.potential_elastic_energy();
+                            let kinet = dulum.kinetic_energy();
+
+                            let total = pot_grav.0 + pot_elas + kinet;
+
+                            egui::CollapsingHeader::new(format!("Dulum {}", ind))   
+                                .show(ui, |ui| {
+                                    ui.label(format!("Pot Grav: {:.2}", pot_grav.0).as_str());
+                                    ui.label(format!("Pot Elas: {:.2}", pot_elas).as_str());
+                                    ui.label(format!("En Kinet: {:.2}", kinet).as_str());
+                                    ui.label(format!("Total: {:.2}", total).as_str());
+                            });
+                        }
+
+                    })
             });
         });
 

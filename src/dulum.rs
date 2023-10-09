@@ -245,3 +245,30 @@ impl Dulum {
         self.elastic
     }
 }
+
+//Energy calculations
+impl Dulum {
+    ///Returns (Energy, new_x, new_y)
+    pub fn potential_gravity_energy(&self, previous_x: f64, previous_y: f64) -> (f64, f64, f64) {
+        let x = previous_x + (self.len * self.angle.sin());
+        let y = previous_y + (self.len * self.angle.cos());
+
+        (- self.mass * 9.8 * y, x, y)
+    }
+
+    pub fn potential_elastic_energy(&self) -> f64 {
+        if !self.elastic {
+            return 0.0;
+        }
+
+        if self.push_elastic && self.len < self.default_len {
+            0.0
+        }else{
+            self.hardness * (self.len - self.default_len).powi(2) / 2.0
+        }
+    }
+
+    pub fn kinetic_energy(&self) -> f64 {
+        self.mass * (self.len_der.powi(2) + self.len.powi(2)*self.angle_der.powi(2) ) / 2.0
+    }
+}
